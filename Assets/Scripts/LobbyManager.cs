@@ -23,10 +23,19 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     #region UNITY Methods
     private void Start()
     {
-        UI_LobbyGameObject.SetActive(false);
-        UI_3DGameObject.SetActive(false);
-        UI_ConnectionStatusGameOject.SetActive(false);
-        UI_LoginGameObject.SetActive(true);
+        if (PhotonNetwork.IsConnected)
+        {
+            UI_LobbyGameObject.SetActive(true);
+            UI_3DGameObject.SetActive(true);
+            UI_ConnectionStatusGameOject.SetActive(false);
+            UI_LoginGameObject.SetActive(false);
+        } else
+        {
+            UI_LobbyGameObject.SetActive(false);
+            UI_3DGameObject.SetActive(false);
+            UI_ConnectionStatusGameOject.SetActive(false);
+            UI_LoginGameObject.SetActive(true);
+        }
     }
 
     private void Update()
