@@ -10,12 +10,6 @@ public class Spinner : MonoBehaviour
     private Rigidbody rb;
     public GameObject playerGraphics;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
