@@ -1961,6 +1961,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01dca8c1c3a7f5a4399c6ea03d8553be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UI_InformPanelGameObject: {fileID: 212251898}
+  UI_InformText: {fileID: 243443568}
+  searchForGamesButtonGameObject: {fileID: 623289035}
 --- !u!4 &1355654560
 Transform:
   m_ObjectHideFlags: 0
