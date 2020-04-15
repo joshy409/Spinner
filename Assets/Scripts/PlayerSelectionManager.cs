@@ -71,6 +71,11 @@ public class PlayerSelectionManager : MonoBehaviour
 
         playerSelectionNumber -= 1;
 
+        if (playerSelectionNumber < 0)
+        {
+            playerSelectionNumber = spinnerModels.Length-1;
+        }
+
         if (playerSelectionNumber == 0 || playerSelectionNumber == 1)
         {
             playerModelType_Text.text = "Attack";
