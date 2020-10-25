@@ -5,9 +5,15 @@ using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
 
-public class BattleScript : MonoBehaviour
+public class BattleScript : MonoBehaviourPun
 {
     public Spinner spinnerScript;
+
+    public GameObject UI3D;
+    public GameObject deathPanelUIPrefab;
+    private GameObject deathPanelUIGameobject;
+
+    private Rigidbody rb;
 
     private float startSpinSpeed;
     private float currentSpinSpeed;
@@ -18,6 +24,7 @@ public class BattleScript : MonoBehaviour
 
     public bool isAttacker;
     public bool isDefender;
+    private bool isDead;
 
     [Header("Player Type Damage Coefficients")]
     public float doDamageCoefficientAttacker = 10f;
@@ -83,23 +90,98 @@ public class BattleScript : MonoBehaviour
     [PunRPC]
     public void DoDamage(float _damageAmount)
     {
+        if (!isDead)
+        {
+            if (isAttacker)
+            {
+                _damageAmount *= getDamagedCoefficientAttacker;
+            }
+            else if (isDefender)
+            {
+                _damageAmount *= getDamagedCoefficientDefender;
+            }
 
-        if (isAttacker)
+            spinnerScript.spinSpeed -= _damageAmount;
+            currentSpinSpeed = spinnerScript.spinSpeed;
+            spinSpeedBar_Image.fillAmount = currentSpinSpeed / startSpinSpeed;
+            spinSpeedRatioText.text = currentSpinSpeed.ToString("F0") + "/" + startSpinSpeed;
+
+            if (currentSpinSpeed < 100)
+            {
+                //Die
+                Die();
+            }
+        }
+    }
+
+    void Die()
+    {
+        isDead = true;
+        GetComponent<MovementController>().enabled = false;
+        rb.freezeRotation = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        spinnerScript.spinSpeed = 0f;
+        UI3D.gameObject.SetActive(false);
+
+        if (photonView.IsMine)
         {
-            _damageAmount *= getDamagedCoefficientAttacker;
-        } else if (isDefender)
+            //countdown for respawn
+            StartCoroutine(Respawn());
+        }
+    }
+
+
+    IEnumerator Respawn()
+    {
+        GameObject canvasGameobject = GameObject.Find("Canvas");
+        if (deathPanelUIGameobject==null)
         {
-            _damageAmount *= getDamagedCoefficientDefender;
+            deathPanelUIGameobject = Instantiate(deathPanelUIPrefab, canvasGameobject.transform);
+        } else
+        {
+            deathPanelUIGameobject.SetActive(true);
         }
 
-        spinnerScript.spinSpeed -= _damageAmount;
+        Text respawnTimeText = deathPanelUIGameobject.transform.Find("RespawnTimeText").GetComponent<Text>();
+
+        float respawnTime = 8.0f;
+        respawnTimeText.text = respawnTime.ToString("F0");
+
+        while (respawnTime > 0.0f)
+        {
+            yield return new WaitForSeconds(1.0f);
+            respawnTime -= 1.0f;
+            respawnTimeText.text = respawnTime.ToString(".00");
+            GetComponent<MovementController>().enabled = false;
+        }
+
+        deathPanelUIGameobject.SetActive(false);
+        GetComponent<MovementController>().enabled = true;
+
+        photonView.RPC("Reborn", RpcTarget.AllBuffered);
+
+    }
+
+    [PunRPC]
+    public void Reborn()
+    {
+        spinnerScript.spinSpeed = startSpinSpeed;
         currentSpinSpeed = spinnerScript.spinSpeed;
+        currentSpinSpeed = spinnerScript.spinSpeed;
+        spinSpeedRatioText.text = currentSpinSpeed + "/" + startSpinSpeed;
         spinSpeedBar_Image.fillAmount = currentSpinSpeed / startSpinSpeed;
-        spinSpeedRatioText.text = currentSpinSpeed.ToString("F0") + "/" + startSpinSpeed;
+        rb.freezeRotation = false;
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+
+        UI3D.SetActive(true);
+        isDead = false;
+
     }
 
     private void Start()
     {
         CheckPlayerType();
+        rb = GetComponent<Rigidbody>();
     }
 }
