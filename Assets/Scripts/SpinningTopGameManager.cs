@@ -16,7 +16,6 @@ public class SpinningTopGameManager : MonoBehaviourPunCallbacks
     void Start()
     {
         UI_InformPanelGameObject.SetActive(true);
-        UI_InformText.text = "Search For to Battle!";
     }
 
     // Update is called once per frame
