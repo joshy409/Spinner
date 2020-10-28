@@ -8,7 +8,7 @@ using TMPro;
 public class ARPlacementAndPlaneDetectionController : MonoBehaviour
 {
     ARPlaneManager m_ARPlaneManager;
-    ARPlacementAndPlaneDetectionController m_ARPlacementManager;
+    ARPlacementManager m_ARPlacementManager;
 
     public GameObject placeButton;
     public GameObject adjustButton;
@@ -20,7 +20,7 @@ public class ARPlacementAndPlaneDetectionController : MonoBehaviour
     private void Awake()
     {
         m_ARPlaneManager = GetComponent<ARPlaneManager>();
-        m_ARPlacementManager = GetComponent<ARPlacementAndPlaneDetectionController>();
+        m_ARPlacementManager = GetComponent<ARPlacementManager>();
     }
 
     private void Start()
