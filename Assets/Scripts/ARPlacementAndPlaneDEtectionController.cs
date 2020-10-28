@@ -5,10 +5,10 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using TMPro;
 
-public class ARPlacementAndPlaneDEtectionController : MonoBehaviour
+public class ARPlacementAndPlaneDetectionController : MonoBehaviour
 {
     ARPlaneManager m_ARPlaneManager;
-    ARPlacementAndPlaneDEtectionController m_ARPlacementManager;
+    ARPlacementAndPlaneDetectionController m_ARPlacementManager;
 
     public GameObject placeButton;
     public GameObject adjustButton;
@@ -19,7 +19,7 @@ public class ARPlacementAndPlaneDEtectionController : MonoBehaviour
     private void Awake()
     {
         m_ARPlaneManager = GetComponent<ARPlaneManager>();
-        m_ARPlacementManager = GetComponent<ARPlacementAndPlaneDEtectionController>();
+        m_ARPlacementManager = GetComponent<ARPlacementAndPlaneDetectionController>();
     }
 
     private void Start()
